@@ -2,34 +2,20 @@
 
 @theme {
   --font-serif: "Noto Serif SC", STSong, SimSun, "Songti SC", Georgia, serif;
-  --font-display: "Playfair Display", Georgia, serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --color-paper: #faf8f5;
-  --color-clay: #f3ede2;
-  --color-charcoal: #1f1b18;
-  --color-sand: #6e665a;
-  --color-seal: #962e2a;
 }
 
 :root {
   color-scheme: light;
   --ink: #1f1b18;
   --muted: #6e665a;
-  --quiet: rgba(110, 102, 90, 0.72);
   --paper: #faf8f5;
-  --clay: #f3ede2;
-  --surface: rgba(243, 237, 226, 0.52);
-  --surface-strong: rgba(243, 237, 226, 0.82);
   --line: rgba(110, 102, 90, 0.16);
   --line-strong: rgba(110, 102, 90, 0.28);
   --accent: #962e2a;
-  --accent-soft: rgba(150, 46, 42, 0.11);
-  --accent-ink: #962e2a;
   --focus: rgba(150, 46, 42, 0.28);
   --site-header-height: 86px;
   --anchor-offset: calc(var(--site-header-height) + 18px);
-  --bagua-sticky-top: calc(var(--site-header-height) + 14px);
 }
 
 @layer base {
@@ -194,8 +180,6 @@
     z-index: 12;
     min-height: 72px;
     padding: 18px clamp(16px, 5vw, 72px);
-    /*border-bottom: 1px solid rgba(110, 102, 90, 0.1);*/
-    /*background: linear-gradient(to bottom, rgba(250, 248, 245, 0.94), rgba(250, 248, 245, 0.78));*/
     backdrop-filter: blur(18px);
   }
 
@@ -270,9 +254,6 @@
 
   .hex-view {
     grid-column: 2;
-  }
-
-  .hex-view {
     display: block;
     height: 100%;
     min-height: 0;
@@ -297,19 +278,7 @@
     position: relative;
     overflow: hidden;
     border: 0;
-    /*border-radius: 2px;*/
-    /*background: rgba(243, 237, 226, 0.18);*/
   }
-
-  /*.panel::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(90deg, rgba(255, 255, 255, 0.34), transparent 32%),
-      repeating-linear-gradient(90deg, rgba(31, 27, 24, 0.015) 0 1px, transparent 1px 13px);
-  }*/
 
   .panel-pad {
     padding: clamp(22px, 3.2vw, 44px);
@@ -319,18 +288,10 @@
     padding: clamp(16px, 2.4dvh, 24px);
   }
 
-  /*.bagua-control,
-  .reading-panel {
-    background: rgba(250, 248, 245, 0.32);
-  }*/
-
   .circle-wrap {
     display: grid;
     place-items: center;
     padding: clamp(10px, 1.8dvh, 16px);
-    /*background:
-      radial-gradient(circle at 50% 50%, rgba(243, 237, 226, 0.46), transparent 68%),
-      rgba(243, 237, 226, 0.16);*/
   }
 
   .bagua-circle {
@@ -450,9 +411,6 @@
   .bagua-section {
     display: grid;
     gap: 8px;
-  }
-
-  .bagua-section {
     padding: clamp(10px, 1.6dvh, 14px) 0;
     border-bottom: 1px solid var(--line);
   }
@@ -680,12 +638,10 @@
     place-items: center;
     margin: 0;
     color: var(--accent);
-    /*background: rgba(243, 237, 226, 0.72);*/
   }
 
   .floating-index.expanded .nav-toggle {
     margin-bottom: 14px;
-    /*background: rgba(150, 46, 42, 0.1);*/
   }
 
   .nav-toggle-icon {
@@ -805,11 +761,6 @@
     line-height: 1.5;
   }
 
-  .hexagram-area,
-  .content-block {
-    display: block;
-  }
-
   .section-kicker,
   .block-label {
     color: var(--accent);
@@ -878,7 +829,6 @@
   }
 
   .classic-panel span,
-  .line-table h3,
   .scholar-panel h3,
   .prose-panel h3,
   .classic-block h4 {
@@ -950,11 +900,6 @@
   .compact-line-table {
     min-width: 0;
     gap: 10px;
-  }
-
-  .compact-line-table h3 {
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
   }
 
   .compact-line-table .line-table-list {
@@ -1177,12 +1122,6 @@
     padding-inline: 12px;
   }
 
-  .loading-panel {
-    min-height: 180px;
-    display: grid;
-    place-items: center;
-    color: var(--muted);
-  }
 }
 
 @keyframes cursor-blink {
@@ -1347,35 +1286,5 @@
 
   .line-stack {
     width: min(168px, 56vw);
-  }
-
-  .md-meta,
-  .md-section[data-kind="diagram"] {
-    grid-template-columns: 1fr;
-  }
-
-  .md-meta div {
-    grid-template-columns: 1fr;
-    gap: 2px;
-  }
-
-  h1.md-heading,
-  h2.md-heading[data-kind="hex-overview"],
-  h2.md-heading[data-kind="line-detail"] {
-    font-size: 1.55rem;
-  }
-
-  .md-paragraph,
-  .md-list,
-  .md-quote,
-  .markdown table,
-  .md-meta {
-    font-size: 1rem;
-  }
-
-  .md-paragraph[data-kind="source"],
-  .md-paragraph[data-kind="image-text"],
-  .md-section[data-kind="source"] .md-paragraph:first-of-type {
-    font-size: 1.08rem;
   }
 }
