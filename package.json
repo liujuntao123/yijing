@@ -6,22 +6,26 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
+    "build:data": "node scripts/build_llm_yijing.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "lucide-react": "^1.22.0",
     "motion": "^12.42.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
+    "@tailwindcss/vite": "^4.3.2",
     "@testing-library/react": "^16.1.0",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^5.2.0",
     "jsdom": "^25.0.1",
+    "tailwindcss": "^4.3.2",
     "typescript": "^5.7.2",
     "vite": "^7.3.6",
     "vitest": "^4.1.9"

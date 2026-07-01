@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周易研习 · 乾卦</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入谷歌中文字体 Noto Serif SC（思源宋体）与英文字体 Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;900&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', 'STSong', 'SimSun', 'serif'],
+                        display: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        paper: '#FAF8F5',     /* 宣纸暖白 */
+                        clay: '#F4F0E8',      /* 粗陶、燕麦色 */
+                        charcoal: '#1F1B18',  /* 暖炭黑，对眼睛极其温和 */
+                        sand: '#756C5F',      /* 细沙灰 */
+                        seal: '#A3332D',      /* 朱砂红 */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            color: #1F1B18;
+            /* 极淡的纸张纹理，仅作质感点缀 */
+            background-image: radial-gradient(rgba(117, 108, 95, 0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="font-serif antialiased selection:bg-clay selection:text-seal">
+
+    <!-- 顶部极简导航栏 -->
+    <header class="border-b border-sand/10 px-6 py-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <!-- 极简印章 -->
+            <div class="w-7 h-7 bg-seal text-paper flex items-center justify-center font-black text-sm rounded-sm">
+                易
+            </div>
+            <span class="text-base font-bold tracking-[0.2em] text-charcoal">周易研习</span>
+        </div>
+        <div class="text-[10px] tracking-[0.2em] text-sand uppercase font-display">
+            Book of Changes / No. 001
+        </div>
+    </header>
+
+    <!-- 主体容器：经典的左辅助、右阅读的双栏版式 -->
+    <main class="max-w-7xl mx-auto px-6 py-12 md:px-12 md:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            <!-- ================== 左栏：卦象符号与基本属性（4列） ================== -->
+            <section class="lg:col-span-4 lg:sticky lg:top-8 space-y-8">
+                
+                <!-- 卦画与禅圆背景 -->
+                <div class="p-8 bg-clay/30 rounded-sm border border-sand/10 flex flex-col items-center">
+                    
+                    <!-- 极其干净的极简八卦盘 -->
+                    <div class="relative w-48 h-48 flex items-center justify-center">
+                        <svg class="absolute inset-0 w-full h-full text-sand/20" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="0.7" stroke-dasharray="2 3"/>
+                        </svg>
+                        
+                        <!-- 核心卦画：深炭黑线条 -->
+                        <div class="w-24 space-y-3 z-10">
+                            <div class="h-2.5 bg-charcoal w-full rounded-xs"></div>
+                            <div class="h-2.5 bg-charcoal w-full rounded-xs"></div>
+                            <div class="h-2.5 bg-charcoal w-full rounded-xs"></div>
+                            <div class="h-2.5 bg-charcoal w-full rounded-xs"></div>
+                            <div class="h-2.5 bg-charcoal w-full rounded-xs"></div>
+                            <!-- 初九爻变红标 -->
+                            <div class="relative">
+                                <div class="h-2.5 bg-seal w-full rounded-xs"></div>
+                                <span class="absolute -right-8 top-1/2 -translate-y-1/2 text-[9px] text-seal tracking-wider font-bold">变爻</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 space-y-1">
+                        <h2 class="text-xl font-bold tracking-widest text-charcoal">乾为天</h2>
+                        <p class="text-xs text-sand">本卦 · 上天下天 · 纯阳至健</p>
+                    </div>
+                </div>
+
+                <!-- 易学参数表：书本边栏风格 -->
+                <div class="border-t border-b border-sand/15 py-6 space-y-3 text-xs tracking-wider">
+                    <div class="flex justify-between text-sand">
+                        <span>六爻状态</span>
+                        <span class="font-mono text-charcoal">9 / 9 / 9 / 9 / 9 / 9</span>
+                    </div>
+                    <div class="flex justify-between text-sand">
+                        <span>初九爻变</span>
+                        <span class="text-seal font-bold">变为 44. 天风姤</span>
+                    </div>
+                    <div class="flex justify-between text-sand">
+                        <span>五行归属</span>
+                        <span class="text-charcoal">金（乾为天金）</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ================== 右栏：高可读性核心内容流（8列） ================== -->
+            <section class="lg:col-span-8 space-y-14">
+                
+                <!-- 1. 标题与核心卦辞（经典木版线装书内页排版） -->
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-2 text-xs tracking-widest text-seal">
+                        <span>第一卦</span>
+                        <span class="w-1 h-1 rounded-full bg-seal/50"></span>
+                        <span>乾下乾上</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-charcoal">
+                        乾。元、亨、利、贞。
+                    </h1>
+                    
+                    <!-- 译文导读：具有呼吸感的段落 -->
+                    <p class="text-sm md:text-base text-sand leading-relaxed tracking-wider">
+                        【本义】乾卦象征天。具备“元（创始）、亨（通达）、利（和谐）、贞（贞固）”四种美德。天道运行，开创万物并赋予其生机，使其自然顺畅地成长，各得其所，最终达到纯正和谐的境界。
+                    </p>
+                </div>
+
+                <!-- 2. 彖传与象传对照区（极其规范的横向双栏） -->
+                <div class="bg-clay/20 p-8 rounded-sm border border-sand/10 space-y-6">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-seal tracking-wider">【彖传】</span>
+                        <p class="text-sm text-charcoal/90 leading-relaxed tracking-wider">
+                            大哉乾元，万物资始，乃统天。云行雨施，品物流形。大明终始，六位时成，时乘六龙以御天。乾道变化，各正性命，保合太和，乃利贞。首出庶物，万国咸宁。
+                        </p>
+                    </div>
+                    <div class="border-t border-sand/10 pt-6 space-y-2">
+                        <span class="text-xs font-bold text-sand tracking-wider">【大象传】</span>
+                        <p class="text-sm text-charcoal/90 leading-relaxed tracking-wider">
+                            天行健，君子以自强不息。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. 爻辞目录（优雅舒缓的诗集排版，虚线牵引，可读性极佳） -->
+                <div class="space-y-4">
+                    <h3 class="text-xs tracking-widest text-sand uppercase font-bold border-b border-sand/15 pb-2">爻辞对照表</h3>
+                    <div class="space-y-4 text-sm tracking-wider">
+                        
+                        <!-- 选中的爻（初九）：使用温和的淡底与红字凸显，结构保持一致 -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3 bg-clay/30 rounded-xs border-l-2 border-seal">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-bold text-seal w-12">初九</span>
+                                <span class="text-charcoal font-semibold">潜龙，勿用。</span>
+                            </div>
+                            <span class="text-xs text-sand/80 mt-1 md:mt-0 italic">《象》曰：潜龙勿用，阳在下也。</span>
+                        </div>
+
+                        <!-- 其它爻：规整对齐 -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-bold text-sand/80 w-12">九二</span>
+                                <span class="text-charcoal">见龙在田，利见大人。</span>
+                            </div>
+                            <span class="text-xs text-sand/60 mt-1 md:mt-0 italic">《象》曰：见龙在田，德施普也。</span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-bold text-sand/80 w-12">九三</span>
+                                <span class="text-charcoal">君子终日乾乾，夕惕若厉，无咎。</span>
+                            </div>
+                            <span class="text-xs text-sand/60 mt-1 md:mt-0 italic">《象》曰：终日乾乾，反复道也。</span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-bold text-sand/80 w-12">九四</span>
+                                <span class="text-charcoal">或跃在渊，无咎。</span>
+                            </div>
+                            <span class="text-xs text-sand/60 mt-1 md:mt-0 italic">《象》曰：或跃在渊，进无咎也。</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 4. 深度解析：初九爻详解区 -->
+                <div class="pt-10 border-t border-charcoal/20 space-y-8">
+                    
+                    <div class="space-y-2">
+                        <span class="text-xs tracking-widest text-seal font-bold">FOCUS ANALYSIS</span>
+                        <h2 class="text-2xl font-bold tracking-widest text-charcoal">初九爻辞详解 · 潜龙勿用</h2>
+                    </div>
+
+                    <!-- 释义 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【白话浅释】</h4>
+                        <p class="text-sm text-charcoal/90 leading-relaxed tracking-wider">
+                            初九是乾卦的第一爻，位置在最下方，代表事物发展的初始阶段。此时阳气刚刚萌芽，力量微弱。龙虽然代表着伟大的才能和潜力，但目前它还潜伏在深水之中。因此，“勿用”并非不作为，而是告诫人们要懂得<strong>韬光养晦、隐忍积蓄，切忌盲目急躁、急于出头</strong>。
+                        </p>
+                    </div>
+
+                    <!-- 爻变对比：用最规整干净的横向并列展示，一目了然 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【爻变与卦变】</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-paper p-6 rounded-sm border border-sand/15">
+                            <div class="space-y-2 border-b md:border-b-0 md:border-r border-sand/15 pb-4 md:pb-0 md:pr-6">
+                                <span class="text-xs font-bold text-seal">初九阳爻变阴：</span>
+                                <p class="text-xs text-sand leading-relaxed">
+                                    初九阳爻若发动，其爻性由阳变阴。本卦【乾为天】的底层基石发生改变，从而转化为变卦【天风姤】。
+                                </p>
+                            </div>
+                            <div class="space-y-2 md:pl-2">
+                                <span class="text-xs font-bold text-charcoal">变卦提示（天风姤）：</span>
+                                <p class="text-xs text-sand leading-relaxed">
+                                    姤卦意为相遇。天下有风，风无孔不入。一阴初生，预示着微小的隐患或新力量已经开始出现，需防微杜渐。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 贤达释义：整齐对称的两栏排版，无任何视觉负担 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【先贤论道】</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <div class="p-5 bg-clay/25 rounded-sm border-l-2 border-sand/40 space-y-2">
+                                <h5 class="text-xs font-bold text-charcoal">北宋 · 邵雍（易学家）</h5>
+                                <p class="text-xs text-charcoal/80 leading-relaxed">
+                                    时运：目前处于沉稳待机的阶段，一动即容易生灾。凡事谋划需有阻力，宜守不宜进。保养身体为上策。
+                                </p>
+                            </div>
+
+                            <div class="p-5 bg-clay/25 rounded-sm border-l-2 border-sand/40 space-y-2">
+                                <h5 class="text-xs font-bold text-charcoal">台湾 · 傅佩荣（国学家）</h5>
+                                <p class="text-xs text-charcoal/80 leading-relaxed">
+                                    哲学：潜藏是主动选择的生存智慧。在自身力量不足、环境未成熟时，积蓄实力才是真正的自强不息。
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 底部总结：金石印章收尾 -->
+                    <div class="flex items-center space-x-3 pt-4">
+                        <div class="w-8 h-8 bg-seal p-[1px] flex items-center justify-center rounded-xs">
+                            <div class="w-full h-full border border-paper/30 text-paper text-[10px] text-center font-bold pt-[3px]">
+                                贞固
+                            </div>
+                        </div>
+                        <span class="text-xs text-sand tracking-widest">积蓄力量 · 贞固待时</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 极简书卷式页脚 -->
+    <footer class="border-t border-sand/15 py-10 text-center text-xs text-sand/60 tracking-[0.2em] mt-20">
+        <p>周易六十四卦 · 乾传</p>
+        <p class="mt-2 font-display text-[9px]">TIMELSSS WISDOM & EDITORIAL TEXT DESIGN</p>
+    </footer>
+
+</body>
+</html>

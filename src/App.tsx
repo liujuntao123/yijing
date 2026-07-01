@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { HexLine } from "./HexLine";
-import { Markdown } from "./markdown";
+import data from "./data/yijing.json";
 import {
-  type HexBrief,
+  type Bit,
   type Hexagram,
   type Trigram,
   TRIGRAMS,
@@ -11,34 +12,46 @@ import {
   changedBits,
   findHexByBits,
   lineWord,
-  parseBriefs,
-  parseIndex,
-  splitHexText,
 } from "./yijing";
 
-type HexTextState = {
-  hexId: number;
-  markdown: string;
-};
+type StructuredDataset = typeof data;
+type StructuredHexagram = StructuredDataset["hexagrams"][number];
+type AspectBlock = StructuredHexagram["overview"]["fuPeirong"];
+type ClassicBlock = StructuredHexagram["overview"]["original"];
+type DetailLine = StructuredHexagram["lines"][number];
+type CanonLine = StructuredHexagram["canon"]["lines"][number];
+
+const hexagrams = data.hexagrams as unknown as StructuredHexagram[];
+const navHexagrams = hexagrams as unknown as Hexagram[];
+const ANIMATION_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+function scrollToAnchoredElement(id: string) {
+  requestAnimationFrame(() => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const scroller = target.closest<HTMLElement>(".hex-view");
+    if (scroller && getComputedStyle(scroller).overflowY !== "visible") {
+      const scrollerRect = scroller.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      scroller.scrollTo({
+        top: scroller.scrollTop + targetRect.top - scrollerRect.top - 18,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
 
 export function App() {
-  const [hexagrams, setHexagrams] = useState<Hexagram[]>([]);
   const [activeHexId, setActiveHexId] = useState(1);
   const [activeLine, setActiveLine] = useState(0);
-  const [hexText, setHexText] = useState<HexTextState | null>(null);
-  const [briefs, setBriefs] = useState<Map<number, HexBrief>>(new Map());
   const [indexOpen, setIndexOpen] = useState(false);
-  const activeHex = hexagrams.find((hex) => hex.id === activeHexId);
-
-  useEffect(() => {
-    fetchText("/yijing64/README.md").then((text) => setHexagrams(parseIndex(text)));
-    fetchText("/yijing64/00-总纲-易经六十四卦原文.md").then((text) => setBriefs(parseBriefs(text)));
-  }, []);
-
-  useEffect(() => {
-    if (!activeHex) return;
-    fetchText(activeHex.path).then((markdown) => setHexText({ hexId: activeHex.id, markdown }));
-  }, [activeHex]);
+  const activeHex = hexagrams.find((hex) => hex.id === activeHexId) ?? hexagrams[0];
+  const toggleIndex = useCallback(() => setIndexOpen((open) => !open), []);
+  const closeIndex = useCallback(() => setIndexOpen(false), []);
 
   const selectHex = (id: number, line = 0) => {
     setActiveHexId(id);
@@ -47,19 +60,32 @@ export function App() {
 
   return (
     <div className={`app ${indexOpen ? "index-open" : "index-collapsed"}`}>
+      <div className="book-gutter" aria-hidden="true">
+        <span className="writing-vertical">周易 · 第{activeHex.id}卦</span>
+        <span className="gutter-rule" />
+        <span className="gutter-mark" />
+        <span className="gutter-rule" />
+        <span className="writing-vertical">{activeHex.name}</span>
+      </div>
+      <div className="page-watermark" aria-hidden="true">
+        {Array.from(activeHex.name.replace(/卦$/, "")).map((char, index) => (
+          <span key={`${char}-${index}`}>{char}</span>
+        ))}
+      </div>
       <HexIndexNav
         hexagrams={hexagrams}
         activeHex={activeHex}
         open={indexOpen}
-        onToggle={() => setIndexOpen((open) => !open)}
+        onToggle={toggleIndex}
+        onClose={closeIndex}
         onSelectHex={selectHex}
       />
       <header className="site-header">
         <div className="title-block">
-          <div className="brand-mark">周易</div>
+          <div className="brand-mark">易</div>
           <div>
-            <h1>易经八卦与六十四卦查询</h1>
-            <p>观象、取义、察变，一处读懂八卦与六十四卦原文。</p>
+            <h1>周易64卦</h1>
+            <p>周易/象传/彖传</p>
           </div>
         </div>
       </header>
@@ -68,20 +94,14 @@ export function App() {
         <section className="workbench">
           <BaguaView
             activeHex={activeHex}
-            hexagrams={hexagrams}
+            hexagrams={navHexagrams}
             activeLine={activeLine}
             onSelectHex={selectHex}
             onSelectLine={setActiveLine}
           />
-          <HexSummary activeHex={activeHex} brief={activeHex ? briefs.get(activeHex.id) : undefined} />
-          <HexView
-            hexagrams={hexagrams}
-            activeHex={activeHex}
-            activeLine={activeLine}
-            hexMarkdown={hexText && hexText.hexId === activeHex?.id ? hexText.markdown : ""}
-            onSelectHex={selectHex}
-            onSelectLine={setActiveLine}
-          />
+          <AnimatePresence initial={false} mode="wait">
+            <HexView key={`hex-${activeHex.id}`} activeHex={activeHex} activeLine={activeLine} onSelectHex={selectHex} onSelectLine={setActiveLine} />
+          </AnimatePresence>
         </section>
       </main>
     </div>
@@ -93,20 +113,35 @@ function HexIndexNav({
   activeHex,
   open,
   onToggle,
+  onClose,
   onSelectHex,
 }: {
-  hexagrams: Hexagram[];
-  activeHex?: Hexagram;
+  hexagrams: StructuredHexagram[];
+  activeHex: StructuredHexagram;
   open: boolean;
   onToggle: () => void;
+  onClose: () => void;
   onSelectHex: (id: number) => void;
 }) {
   const reduce = useReducedMotion();
+  const indexRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const filtered = hexagrams.filter((hex) => `${hex.id}${hex.name}${hex.image}${hex.summary}`.includes(query.trim()));
 
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      if (!indexRef.current?.contains(event.target)) onClose();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [onClose, open]);
+
   return (
-    <aside className={`floating-index ${open ? "expanded" : "collapsed"}`} aria-label="卦辞检索">
+    <aside ref={indexRef} className={`floating-index ${open ? "expanded" : "collapsed"}`} aria-label="卦辞检索">
       <button
         className="nav-toggle"
         type="button"
@@ -115,57 +150,66 @@ function HexIndexNav({
         aria-controls="hex-index-panel"
         onClick={onToggle}
       >
-        <span className="hamburger-lines" aria-hidden="true" />
+        {open ? <X className="nav-toggle-icon" aria-hidden="true" /> : <Search className="nav-toggle-icon" aria-hidden="true" />}
       </button>
-      {open ? (
-        <div id="hex-index-panel" className="index-panel-content">
-          <div className="hex-tools">
-            <label>
-              <span>检索</span>
-              <input type="search" placeholder="搜索卦名、卦象、简义" value={query} onChange={(event) => setQuery(event.target.value)} />
-            </label>
-            <label>
-              <span>选卦</span>
-              <select aria-label="选择六十四卦" value={activeHex?.id ?? ""} onChange={(event) => onSelectHex(Number(event.target.value))}>
-                {hexagrams.map((hex) => (
-                  <option key={hex.id} value={hex.id}>
-                    {hex.id}. {hex.name}（{hex.image}）
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="hex-list">
-            {filtered.map((hex) => (
-              <motion.button
-                key={hex.id}
-                className={hex.id === activeHex?.id ? "active" : ""}
-                type="button"
-                onClick={() => onSelectHex(hex.id)}
-                initial={reduce ? false : { opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.25, delay: Math.min(hex.id, 12) * 0.015 }}
-              >
-                <div className="hex-entry">
-                  <div className="line-stack">
-                    {[...hex.bits].map((bit, index) => (
-                      <HexLine key={index} bit={bit} />
-                    )).reverse()}
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            id="hex-index-panel"
+            className="index-panel-content"
+            initial={reduce ? false : { opacity: 0, x: -8, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, x: -6, scale: 0.98 }}
+            transition={{ duration: reduce ? 0.01 : 0.3, ease: ANIMATION_EASE }}
+          >
+            <div className="hex-tools">
+              <label>
+                <span>检索</span>
+                <input type="search" placeholder="搜索卦名、卦象、简义" value={query} onChange={(event) => setQuery(event.target.value)} />
+              </label>
+              <label>
+                <span>选卦</span>
+                <select aria-label="选择六十四卦" value={activeHex.id} onChange={(event) => onSelectHex(Number(event.target.value))}>
+                  {hexagrams.map((hex) => (
+                    <option key={hex.id} value={hex.id}>
+                      {hex.id}. {hex.name}（{hex.image}）
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="hex-list">
+              {filtered.map((hex) => (
+                <motion.button
+                  key={hex.id}
+                  className={hex.id === activeHex.id ? "active" : ""}
+                  type="button"
+                  onClick={() => onSelectHex(hex.id)}
+                  initial={reduce ? false : { opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.25, delay: Math.min(hex.id, 12) * 0.015 }}
+                >
+                  <div className="hex-entry">
+                    <div className="line-stack">
+                      {[...hex.bits].map((bit, index) => (
+                        <HexLine key={index} bit={bit as Bit} />
+                      )).reverse()}
+                    </div>
+                    <div>
+                      <strong>
+                        {hex.id}. {hex.name}
+                      </strong>
+                      <small>
+                        {hex.image} / {hex.summary}
+                      </small>
+                    </div>
                   </div>
-                  <div>
-                    <strong>
-                      {hex.id}. {hex.name}
-                    </strong>
-                    <small>
-                      {hex.image} · {hex.summary}
-                    </small>
-                  </div>
-                </div>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      ) : null}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </aside>
   );
 }
@@ -177,49 +221,39 @@ function BaguaView({
   onSelectHex,
   onSelectLine,
 }: {
-  activeHex?: Hexagram;
+  activeHex: StructuredHexagram;
   hexagrams: Hexagram[];
   activeLine: number;
   onSelectHex: (id: number, line?: number) => void;
   onSelectLine: (line: number) => void;
 }) {
-  const reduce = useReducedMotion();
-  const [selected, setSelected] = useState<Trigram>(TRIGRAMS[0]);
-  const lowerKey = activeHex ? bitsKey(activeHex.bits.slice(0, 3)) : "";
-  const upperKey = activeHex ? bitsKey(activeHex.bits.slice(3, 6)) : "";
-  const currentBits = activeHex?.bits ?? [...selected.bits, ...selected.bits];
-  const changed = activeHex ? findHexByBits(hexagrams, changedBits(activeHex.bits, activeLine)) : undefined;
-  const activeLineLabel = activeHex ? lineWord(activeHex.bits[activeLine], activeLine) : "";
-  const lineCode = currentBits.map((bit) => (bit ? 9 : 6)).join(" / ");
+  const currentBits = activeHex.bits as unknown as Hexagram["bits"];
+  const lowerKey = bitsKey(currentBits.slice(0, 3));
+  const upperKey = bitsKey(currentBits.slice(3, 6));
+  const lowerTrigram = TRIGRAMS.find((gua) => bitsKey(gua.bits) === lowerKey);
+  const upperTrigram = TRIGRAMS.find((gua) => bitsKey(gua.bits) === upperKey);
+  const activeTrigramKeys = [lowerKey, upperKey];
+  const changed = findHexByBits(hexagrams, changedBits(currentBits, activeLine));
+  const activeLineLabel = lineWord(currentBits[activeLine], activeLine);
 
   const pickTrigram = (gua: Trigram) => {
-    setSelected(gua);
     const hex = findHexByBits(hexagrams, [...gua.bits, ...gua.bits]);
     if (hex) onSelectHex(hex.id);
   };
 
   const toggleLine = (index: number) => {
-    if (!activeHex) return;
-    const hex = findHexByBits(hexagrams, changedBits(activeHex.bits, index));
-    if (hex) onSelectHex(hex.id);
+    const hex = findHexByBits(hexagrams, changedBits(currentBits, index));
+    if (hex) onSelectHex(hex.id, index);
   };
 
   return (
-    <motion.section
-      className="view bagua-view"
-      initial={reduce ? false : { opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={reduce ? undefined : { opacity: 0, y: -12 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <section className="view bagua-view">
       <div className="circle-wrap">
         <div className="bagua-circle" aria-label="八卦入口">
           {TRIGRAMS.map((gua, index) => (
             <button
               key={gua.key}
-              className={`trigram-btn ${gua.key === selected.key ? "active" : ""} ${
-                [lowerKey, upperKey].includes(bitsKey(gua.bits)) ? "in-active-hex" : ""
-              }`}
+              className={`trigram-btn ${activeTrigramKeys.includes(bitsKey(gua.bits)) ? "active" : ""}`}
               type="button"
               style={{ "--angle": `${index * 45}deg` } as React.CSSProperties}
               onClick={() => pickTrigram(gua)}
@@ -236,128 +270,73 @@ function BaguaView({
       </div>
 
       <aside className="panel panel-pad reading-panel bagua-control">
-        <div className="bagua-control-head">
-          <div className="bagua-status">
-            <span className="bagua-eyebrow">{activeHex ? "当前卦象" : "当前选象"}</span>
-            <strong>{activeHex ? `${activeHex.id}. ${activeHex.name}` : `${selected.name}为${selected.nature}`}</strong>
-            <span>{activeHex ? `${activeHex.image} · 上${activeHex.upper}下${activeHex.lower}` : selected.text}</span>
+        <section className="bagua-section change-box compact-change-box" aria-label={`${activeLineLabel}变卦`}>
+          <div className="compact-change-text">
+            <span>{activeLineLabel}变卦</span>
+            {changed ? (
+              <strong>
+                {changed.id}. {changed.name}
+              </strong>
+            ) : null}
           </div>
-          <button className="pill reset-pill" type="button" onClick={() => pickTrigram(selected)}>
-            复位
-          </button>
-        </div>
-        <section className="bagua-section line-editor-section">
-          <div className="bagua-section-title">
-            <span>六爻</span>
-            <span className="bagua-line-code">当前六爻：{lineCode}</span>
-          </div>
-          <div className="interactive-lines">
-            <div className="trigram-editors">
-              <div className="trigram-editor">
-                <span>上卦</span>
-                <div className="line-stack">
-                  {[5, 4, 3].map((index) => (
-                    <HexLine key={index} bit={currentBits[index]} label={`${lineWord(currentBits[index], index)}，点击切换`} onClick={() => toggleLine(index)} />
-                  ))}
-                </div>
-              </div>
-              <div className="trigram-editor">
-                <span>下卦</span>
-                <div className="line-stack">
-                  {[2, 1, 0].map((index) => (
-                    <HexLine key={index} bit={currentBits[index]} label={`${lineWord(currentBits[index], index)}，点击切换`} onClick={() => toggleLine(index)} />
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="change-actions">
+            {changed ? (
+              <button className="pill" type="button" onClick={() => onSelectHex(changed.id, activeLine)}>
+                变卦为 {changed.name}
+              </button>
+            ) : null}
           </div>
         </section>
-        {activeHex ? (
-          <section className="bagua-section change-box">
-            <div className="bagua-section-title">
-              <span>{activeLineLabel}变卦</span>
-              {changed ? <span className="bagua-line-code">{changed.id}. {changed.name}</span> : null}
+        <section className="bagua-section line-editor-section">
+          <div className="line-editor-body">
+            <div className="hex-orb compact-hex-orb">
+              <div className="hex-orb-labels" aria-hidden="true">
+                <span>
+                  <small>上卦</small>
+                  <strong>{upperTrigram?.name ?? activeHex.upper}</strong>
+                </span>
+                <span>
+                  <small>下卦</small>
+                  <strong>{lowerTrigram?.name ?? activeHex.lower}</strong>
+                </span>
+              </div>
+              <div className="large-line-stack side-lines" aria-label={`${activeHex.name}卦象，点击切换爻`}>
+                {[...currentBits].map((bit, index) => (
+                  <HexLine
+                    key={index}
+                    bit={bit}
+                    selected={activeLine === index}
+                    label={`${lineWord(bit, index)}，点击切换`}
+                    onClick={() => {
+                      onSelectLine(index);
+                      toggleLine(index);
+                    }}
+                  />
+                )).reverse()}
+              </div>
             </div>
-            <p>
-              {changed
-                ? `此爻由 ${activeHex.bits[activeLine] ? 9 : 6} 变为 ${activeHex.bits[activeLine] ? 6 : 9}，变为 ${changed.id}. ${changed.name}（${changed.image}）。`
-                : "没有找到对应变卦。"}
-            </p>
-            <div className="change-actions">
-              <button className="pill" type="button" onClick={() => onSelectLine(activeLine)}>
-                查看{activeLineLabel}
-              </button>
-              {changed ? (
-                <button className="pill" type="button" onClick={() => onSelectHex(changed.id, activeLine)}>
-                  跳转到 {changed.name}
-                </button>
-              ) : null}
-            </div>
-          </section>
-        ) : null}
-      </aside>
-    </motion.section>
-  );
-}
-
-function HexSummary({ activeHex, brief }: { activeHex?: Hexagram; brief?: HexBrief }) {
-  if (!activeHex) return <article className="panel panel-pad summary-panel">正在读取资料...</article>;
-
-  const title = brief?.title || `${activeHex.name} ${activeHex.image}`;
-  const text = brief?.text || activeHex.summary;
-
-  return (
-    <article className="panel panel-pad summary-panel">
-      <div className="detail-head compact-head">
-        <div>
-          <h2>
-            {activeHex.id}. {title}
-          </h2>
-          <div className="muted">
-            本卦：{activeHex.image} · 上{activeHex.upper}下{activeHex.lower}
+            <LineTable lines={activeHex.canon.lines} activeLine={activeLine} onSelectLine={onSelectLine} compact />
           </div>
-        </div>
-        <a className="pill anchor-pill" href="#hex-detail">
-          查看详细介绍
-        </a>
-      </div>
-      <section className="markdown summary-markdown">
-        <Markdown text={text} />
-      </section>
-    </article>
+        </section>
+      </aside>
+    </section>
   );
 }
 
 function HexView({
-  hexagrams,
   activeHex,
   activeLine,
-  hexMarkdown,
   onSelectHex,
   onSelectLine,
 }: {
-  hexagrams: Hexagram[];
-  activeHex?: Hexagram;
+  activeHex: StructuredHexagram;
   activeLine: number;
-  hexMarkdown: string;
   onSelectHex: (id: number, line?: number) => void;
   onSelectLine: (line: number) => void;
 }) {
   const reduce = useReducedMotion();
-  const [showOverview, setShowOverview] = useState(false);
-  const parts = useMemo(() => splitHexText(hexMarkdown), [hexMarkdown]);
-
-  useEffect(() => setShowOverview(false), [activeHex?.id, activeLine]);
-
-  if (!activeHex) {
-    return (
-      <motion.section className="view hex-view" initial={false} animate={{ opacity: 1 }}>
-        <article className="panel panel-pad loading-panel">正在读取资料...</article>
-      </motion.section>
-    );
-  }
-
-  const content = showOverview ? parts.overview : parts.lines[activeLine] || parts.overview;
+  const line = activeHex.lines[activeLine] ?? activeHex.lines[0];
+  const overview = useMemo(() => activeHex.overview, [activeHex]);
 
   return (
     <motion.section
@@ -365,46 +344,257 @@ function HexView({
       initial={reduce ? false : { opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduce ? undefined : { opacity: 0, y: -12 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: reduce ? 0.01 : 0.46, ease: ANIMATION_EASE }}
     >
-      <article id="hex-detail" className="panel panel-pad reading-panel">
-        <div className="detail-head hex-detail-head">
+      <article id="hex-detail" className="panel panel-pad reading-panel summary-panel">
+        <div className="detail-head compact-head">
           <div>
-            <h2>
-              {activeHex.id}. {activeHex.name}
-            </h2>
+            <div className="section-kicker">
+              第{activeHex.id}卦 / {activeHex.upper}上{activeHex.lower}下
+            </div>
+            <h2>{activeHex.image}</h2>
             <div className="muted">
-              {activeHex.image} · {activeHex.summary} · 上{activeHex.upper}下{activeHex.lower}
+              本卦：{activeHex.image} / {activeHex.summary}
             </div>
           </div>
-          <div className="detail-actions">
-            <button className="pill" type="button" onClick={() => setShowOverview(true)}>
-              卦辞总览
-            </button>
-            <div className="hex-lines" aria-label="选择爻">
-              {[...activeHex.bits].map((bit, index) => (
-                <div key={index} className={`line-label ${activeLine === index ? "active" : ""}`}>
-                  <HexLine bit={bit} selected={activeLine === index} label={`${lineWord(bit, index)}，点击查看爻辞`} onClick={() => onSelectLine(index)} />
-                  <span>{lineWord(bit, index)}</span>
-                </div>
-              )).reverse()}
-            </div>
-          </div>
+          <a
+            className="pill anchor-pill"
+            href="#line-detail"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToAnchoredElement("line-detail");
+            }}
+          >
+            查看爻辞
+          </a>
         </div>
-        <div className="hexagram-area">
-          <div className="content-block">
-            <section className="markdown">
-              <Markdown text={content} />
-            </section>
+
+        <div className="structured-html">
+          <TypewriterQuote paragraphs={activeHex.canon.guaci} runKey={activeHex.id} />
+
+          <div className="canon-grid">
+            <ClassicPanel title="彖辞" paragraphs={activeHex.canon.tuan} />
+            <ClassicPanel title="象辞" paragraphs={activeHex.canon.xiang} muted />
           </div>
+
+          <section className="source-block">
+            <div className="block-label">卦辞原文</div>
+            <ClassicBlockView block={overview.original} />
+            <ClassicBlockView block={overview.translation} quiet title="白话文解释" />
+          </section>
+
+          <section id="line-detail" className="line-focus">
+            <div className="line-focus-head">
+              <div>
+                <div className="block-label">当前爻辞</div>
+                <h3>{line.name || lineWord(activeHex.bits[activeLine] as Bit, activeLine)}</h3>
+              </div>
+              <span>{line.heading}</span>
+            </div>
+            <ClassicBlockView block={line.original} />
+            <ClassicBlockView block={line.translation} quiet title="白话浅释" />
+          </section>
+
+          <ChangeBlock line={line} onSelectHex={onSelectHex} activeLine={activeLine} />
+
+          <div className="scholar-grid">
+            <ScholarPanel title="邵雍解" paragraphs={line.shaoyong.length ? line.shaoyong : overview.shaoyong} />
+            <AspectPanel title="傅佩荣解" block={line.fuPeirong.items.length || line.fuPeirong.text.length ? line.fuPeirong : overview.fuPeirong} />
+          </div>
+
+          <AspectPanel title="传统解卦" block={overview.traditional} wide />
+          <ParagraphPanel title={`${line.name}爻的哲学含义`} paragraphs={line.philosophy} />
+          <ParagraphPanel title="本卦哲学含义" paragraphs={overview.philosophy} />
         </div>
       </article>
     </motion.section>
   );
 }
 
-async function fetchText(path: string): Promise<string> {
-  const response = await fetch(encodeURI(path));
-  if (!response.ok) throw new Error(`读取失败：${path}`);
-  return response.text();
+function TypewriterQuote({ paragraphs, runKey }: { paragraphs: string[]; runKey: number }) {
+  const reduce = useReducedMotion();
+  const shouldReduce = Boolean(reduce);
+  const fullLength = useMemo(() => paragraphs.reduce((total, text) => total + Array.from(text).length, 0), [paragraphs]);
+  const [visibleCount, setVisibleCount] = useState(() => (shouldReduce ? fullLength : 0));
+
+  useEffect(() => {
+    if (shouldReduce) {
+      setVisibleCount(fullLength);
+      return;
+    }
+
+    let timeout: number | undefined;
+    setVisibleCount(0);
+
+    const tick = () => {
+      setVisibleCount((count) => {
+        const next = Math.min(count + 1, fullLength);
+        if (next < fullLength) timeout = window.setTimeout(tick, 55);
+        return next;
+      });
+    };
+
+    timeout = window.setTimeout(tick, 180);
+    return () => {
+      if (timeout) window.clearTimeout(timeout);
+    };
+  }, [fullLength, runKey, shouldReduce]);
+
+  let remaining = visibleCount;
+  let cursorIndex = paragraphs.length - 1;
+  const visibleParagraphs = paragraphs.map((text, index) => {
+    const chars = Array.from(text);
+    const visibleText = chars.slice(0, Math.max(0, remaining)).join("");
+    if (remaining >= 0 && remaining < chars.length) cursorIndex = index;
+    remaining -= chars.length;
+    return visibleText;
+  });
+
+  return (
+    <section className="classic-quote" aria-label={paragraphs.join(" ")}>
+      <div className="classic-quote-measure" aria-hidden="true">
+        {paragraphs.map((text) => (
+          <p key={text}>{text}</p>
+        ))}
+      </div>
+      <div className="classic-quote-typed" aria-hidden="true">
+        {visibleParagraphs.map((text, index) => (
+          <p key={`${paragraphs[index]}-${index}`}>
+            {text}
+            {visibleCount < fullLength && index === cursorIndex && !shouldReduce ? <span className="type-cursor" /> : null}
+          </p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LineTable({
+  lines,
+  activeLine,
+  onSelectLine,
+  compact = false,
+}: {
+  lines: CanonLine[];
+  activeLine: number;
+  onSelectLine: (line: number) => void;
+  compact?: boolean;
+}) {
+  const displayLines = [...lines].reverse();
+  const scrollToLineDetail = () => {
+    scrollToAnchoredElement("line-detail");
+  };
+
+  return (
+    <section className={`line-table ${compact ? "compact-line-table" : ""}`}>
+      <div className="line-table-list">
+        {displayLines.map((canonLine) => (
+          <button
+            key={canonLine.index}
+            className={`line-row ${activeLine === canonLine.index ? "active" : ""}`}
+            type="button"
+            aria-label={`${canonLine.name}，点击查看爻辞`}
+            onClick={() => {
+              onSelectLine(canonLine.index);
+              scrollToLineDetail();
+            }}
+          >
+            <span className="line-row-name">{canonLine.name}</span>
+            <span className="line-row-text">{canonLine.text}</span>
+            <span className="line-row-image">{canonLine.imageText}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ClassicPanel({ title, paragraphs, muted = false }: { title: string; paragraphs: string[]; muted?: boolean }) {
+  return (
+    <section className={`classic-panel ${muted ? "muted-panel" : ""}`}>
+      <span>{title}</span>
+      {paragraphs.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </section>
+  );
+}
+
+function ClassicBlockView({ block, quiet = false, title }: { block: ClassicBlock; quiet?: boolean; title?: string }) {
+  return (
+    <div className={`classic-block ${quiet ? "quiet" : ""}`}>
+      {title ? <h4>{title}</h4> : null}
+      {block.text.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+      {block.imageText.map((paragraph) => (
+        <p className="image-text" key={paragraph}>
+          {paragraph}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function ChangeBlock({ line, activeLine, onSelectHex }: { line: DetailLine; activeLine: number; onSelectHex: (id: number, line?: number) => void }) {
+  const targetId = line.change.targetId;
+  return (
+    <section className="change-template change-box">
+      <div>
+        <div className="block-label">爻变与卦变</div>
+        <h3>{targetId ? `变为 ${targetId}. ${line.change.targetName}` : "变卦"}</h3>
+        <p>{line.change.description || "此爻暂无结构化变卦说明。"}</p>
+        {targetId ? (
+          <button className="pill" type="button" onClick={() => onSelectHex(targetId, activeLine)}>
+            变卦为 {line.change.targetName}
+          </button>
+        ) : null}
+      </div>
+      <div className="change-figure">
+        {line.change.images[0] ? <img src={line.change.images[0].src} alt={line.change.images[0].alt} loading="lazy" /> : <span>变</span>}
+      </div>
+    </section>
+  );
+}
+
+function ScholarPanel({ title, paragraphs }: { title: string; paragraphs: string[] }) {
+  return (
+    <section className="scholar-panel">
+      <h3>{title}</h3>
+      {paragraphs.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </section>
+  );
+}
+
+function AspectPanel({ title, block, wide = false }: { title: string; block: AspectBlock; wide?: boolean }) {
+  return (
+    <section className={`scholar-panel aspect-panel ${wide ? "wide" : ""}`}>
+      <h3>{title}</h3>
+      {block.text.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+      <div className="aspect-list">
+        {block.items.map((item) => (
+          <div key={`${item.label}-${item.text}`}>
+            <span>{item.label}</span>
+            <p>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ParagraphPanel({ title, paragraphs }: { title: string; paragraphs: string[] }) {
+  if (!paragraphs.length) return null;
+  return (
+    <section className="prose-panel">
+      <h3>{title}</h3>
+      {paragraphs.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </section>
+  );
 }

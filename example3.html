@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周易古籍 · 乾卦珍本</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入思源宋体，确保中文字型高规整统一 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', 'STSong', 'SimSun', 'serif'],
+                    },
+                    colors: {
+                        paper: '#FAF8F5',     /* 宣纸暖白 */
+                        clay: '#F4F0E8',      /* 粗陶暖沙 */
+                        charcoal: '#1C1917',  /* 松烟墨黑 */
+                        sand: '#756C5F',      /* 苔藓与细沙灰 */
+                        seal: '#A3332D',      /* 朱砂红 */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            color: #1C1917;
+            background-image: radial-gradient(rgba(117, 108, 95, 0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        /* 竖排文字排版 */
+        .writing-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        /* 墨晕动效：模拟水墨滴入宣纸自然渗开 */
+        @keyframes inkSoak {
+            0% {
+                filter: blur(6px);
+                opacity: 0;
+                transform: scale(0.995);
+            }
+            100% {
+                filter: blur(0px);
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .ink-fade-active {
+            animation: inkSoak 0.8s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+        }
+    </style>
+</head>
+<body class="font-serif antialiased selection:bg-clay selection:text-seal relative min-h-screen md:pl-16">
+
+    <!-- ================== 艺术装饰层：古典线装书“书口鱼尾”页边 ================== -->
+    <div class="hidden xl:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center text-[11px] text-sand/35 tracking-[0.4em] space-y-4 select-none pointer-events-none">
+        <span class="writing-vertical font-semibold">周易真本 · 乾部第一卷</span>
+        <div class="w-[1px] h-10 bg-sand/15"></div>
+        <svg class="w-3 h-3 text-sand/30" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 12h20L12 2zm0 20l10-10H2l10 10z"/>
+        </svg>
+        <div class="w-[1px] h-10 bg-sand/15"></div>
+        <span class="writing-vertical font-semibold">乾卦首叶</span>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <header class="border-b border-sand/10 px-6 py-6 md:px-12 flex justify-between items-center bg-[#FAF8F5]/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="w-7 h-7 bg-seal text-paper flex items-center justify-center font-black text-sm rounded-sm">
+                易
+            </div>
+            <span class="text-base font-bold tracking-[0.2em] text-charcoal">周易古籍研习</span>
+        </div>
+        <div class="text-[11px] tracking-[0.2em] text-sand font-medium">
+            宋版木刻 · 宣纸朱丝栏式
+        </div>
+    </header>
+
+    <!-- 主体容器 -->
+    <main class="max-w-7xl mx-auto px-6 py-12 md:px-12 md:py-16 relative">
+        
+        <!-- 背景书法水印：乾 -->
+        <div class="absolute right-0 top-[15%] text-[30rem] md:text-[36rem] font-bold text-sand/[0.02] pointer-events-none select-none font-serif leading-none">
+            乾
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            <!-- ================== 左栏：卦意图示与四元卦象矩阵（4列） ================== -->
+            <section class="lg:col-span-4 lg:sticky lg:top-24 space-y-8">
+                
+                <!-- 核心卦画展示（交互联动高亮） -->
+                <div class="relative p-6 bg-clay/20 rounded-sm border border-sand/10 flex flex-col items-center overflow-hidden">
+                    <div class="absolute inset-0 bg-radial-gradient bg-gradient-to-tr from-clay/40 via-transparent to-transparent pointer-events-none"></div>
+                    <div class="absolute -left-6 -bottom-10 text-[10rem] font-black text-sand/[0.03] select-none pointer-events-none">天</div>
+                    
+                    <div class="relative w-48 h-48 flex items-center justify-center">
+                        <svg class="absolute inset-0 w-full h-full text-sand/20" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="0.7" stroke-dasharray="2 3"/>
+                        </svg>
+                        
+                        <!-- 阳爻整线列表（通过JS附加高亮框） -->
+                        <div class="w-24 space-y-3 z-10">
+                            <div onclick="selectLineByGua(5)" id="gualine-5" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                            <div onclick="selectLineByGua(4)" id="gualine-4" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                            <div onclick="selectLineByGua(3)" id="gualine-3" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                            <div onclick="selectLineByGua(2)" id="gualine-2" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                            <div onclick="selectLineByGua(1)" id="gualine-1" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                            <div onclick="selectLineByGua(0)" id="gualine-0" class="h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3 space-y-1 z-10">
+                        <h2 class="text-xl font-bold tracking-widest text-charcoal">乾为天</h2>
+                        <p class="text-xs text-sand">刚健中正 · 纯阳之始</p>
+                    </div>
+                </div>
+
+                <!-- 四元卦象矩阵（本卦、互卦、错卦、综卦） -->
+                <div class="p-6 bg-clay/10 rounded-sm border border-sand/10 space-y-4">
+                    <span class="text-xs font-bold text-sand tracking-widest block border-b border-sand/15 pb-2">「 四元卦象对照 」</span>
+                    <div class="grid grid-cols-2 gap-4" id="diagrams-grid">
+                        <!-- 由JS渲染卦图 -->
+                    </div>
+                </div>
+
+                <!-- 参数简表 -->
+                <div class="border-t border-b border-sand/15 py-4 space-y-2 text-xs tracking-wider">
+                    <div class="flex justify-between text-sand">
+                        <span>上卦卦象</span>
+                        <span class="text-charcoal font-semibold">天（乾）</span>
+                    </div>
+                    <div class="flex justify-between text-sand">
+                        <span>下卦卦象</span>
+                        <span class="text-charcoal font-semibold">天（乾）</span>
+                    </div>
+                    <div class="flex justify-between text-sand">
+                        <span>六爻爻性</span>
+                        <span class="text-charcoal">一一一一一一</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ================== 右栏：高可读性核心内容流（8列） ================== -->
+            <section class="lg:col-span-8 space-y-12">
+                
+                <!-- 1. 标题区 -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2 text-xs tracking-widest text-seal">
+                        <span>第一卦</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-seal/40"></span>
+                        <span>乾上乾下</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-charcoal" id="canon-title"></h1>
+                </div>
+
+                <!-- 2. 朱丝栏核心卦辞区 -->
+                <div class="relative p-8 md:p-10 bg-clay/20 border border-seal/15 rounded-sm overflow-hidden shadow-[inset_0_1px_4px_rgba(163,51,45,0.03)]" 
+                     style="background-image: linear-gradient(rgba(163, 51, 45, 0.04) 1px, transparent 1px); background-size: 100% 2.2rem;">
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-seal tracking-wider">【卦辞古文】</span>
+                        </div>
+                        <p id="guaci-text" class="text-[17px] text-charcoal/90 tracking-wider font-semibold leading-[2.2rem]" style="margin-top: 0.5rem;"></p>
+                    </div>
+
+                    <div class="border-t border-sand/20 mt-8 pt-6 space-y-3">
+                        <span class="text-xs font-bold text-sand tracking-wider">【彖辞传】</span>
+                        <p id="tuan-text" class="text-sm text-charcoal/80 leading-relaxed tracking-wider"></p>
+                    </div>
+
+                    <div class="border-t border-sand/20 mt-6 pt-6 space-y-3">
+                        <span class="text-xs font-bold text-sand tracking-wider">【大象传】</span>
+                        <p id="xiang-text" class="text-sm text-charcoal/80 leading-relaxed tracking-wider"></p>
+                    </div>
+                </div>
+
+                <!-- 3. 白话直译区 -->
+                <div class="space-y-4 border-l-2 border-sand/30 pl-6 bg-clay/5 py-4 rounded-r-sm">
+                    <span class="text-xs font-bold text-sand tracking-widest block">【卦辞白话译文】</span>
+                    <div id="overview-translation-text" class="text-sm text-sand leading-relaxed space-y-2"></div>
+                </div>
+
+                <!-- 4. 爻辞目录交互区（高清晰度书格排版，点击任意爻将向下联动墨晕动效） -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-sand/15 pb-2">
+                        <h3 class="text-xs tracking-widest text-sand uppercase font-bold">六爻爻辞一览（可点击精细解读）</h3>
+                        <span class="text-[10px] text-seal font-bold">点击任意行查看注疏 </span>
+                    </div>
+                    <div id="lines-interactive-list" class="space-y-3 text-sm tracking-wider">
+                        <!-- 由JS渲染交互列表 -->
+                    </div>
+                </div>
+
+                <!-- 5. 【高交互】深度解析：爻象释难（带墨晕淡入动效） -->
+                <div id="dynamic-detail-section" class="pt-10 border-t border-charcoal/20 space-y-8 ink-fade-active">
+                    
+                    <div class="space-y-2">
+                        <span class="text-xs tracking-widest text-seal font-bold">爻象释难 · 深度解析</span>
+                        <h2 id="dynamic-detail-title" class="text-2xl font-bold tracking-widest text-charcoal"></h2>
+                    </div>
+
+                    <!-- 白话爻意 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【本爻白话释解】</h4>
+                        <div id="dynamic-detail-translation" class="text-sm text-charcoal/90 leading-relaxed space-y-2"></div>
+                    </div>
+
+                    <!-- 爻变与卦变规律 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【爻变与卦变规律】</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#FAF7F2] p-6 rounded-sm border border-sand/15 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+                            <div class="space-y-2 border-b md:border-b-0 md:border-r border-sand/15 pb-4 md:pb-0 md:pr-6">
+                                <span id="dynamic-change-target" class="text-xs font-bold text-seal"></span>
+                                <p id="dynamic-change-desc" class="text-xs text-sand leading-relaxed mt-2"></p>
+                            </div>
+                            <div class="space-y-2 flex flex-col justify-center items-center">
+                                <span class="text-[10px] text-sand/60 tracking-widest mb-2">变卦参考图</span>
+                                <img id="dynamic-change-img" class="h-20 w-auto object-contain grayscale-[60%] hover:grayscale-0 transition-all" src="" alt="变卦">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 先贤注疏 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【先贤注疏】</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- 邵雍占 -->
+                            <div class="p-5 bg-[#F2ECE0]/60 rounded-sm border border-sand/15 space-y-2">
+                                <h5 class="text-xs font-bold text-charcoal flex items-center justify-between">
+                                    <span>北宋 · 邵雍（断占）</span>
+                                    <span class="text-[8px] bg-charcoal/5 text-charcoal px-1.5 py-0.5 rounded-xs">时运断</span>
+                                </h5>
+                                <p id="dynamic-shaoyong" class="text-xs text-charcoal/85 leading-relaxed"></p>
+                            </div>
+                            <!-- 傅佩荣断 -->
+                            <div class="p-5 bg-paper rounded-sm border border-sand/15 space-y-2">
+                                <h5 class="text-xs font-bold text-seal flex items-center justify-between">
+                                    <span>现代 · 傅佩荣（践行）</span>
+                                    <span class="text-[8px] bg-seal/5 text-seal px-1.5 py-0.5 rounded-xs">修行引</span>
+                                </h5>
+                                <div id="dynamic-fupeirong-list" class="text-xs text-charcoal/85 space-y-1.5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 哲学解说 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs tracking-widest text-sand uppercase font-bold">【易理深究】</h4>
+                        <div id="dynamic-philosophy" class="text-sm text-sand/90 leading-relaxed space-y-3"></div>
+                    </div>
+
+                    <!-- 底部总结：白文阴刻印章 -->
+                    <div class="flex items-center space-x-3 pt-4">
+                        <div class="w-8 h-8 bg-seal p-[2px] flex items-center justify-center rounded-xs select-none shadow-sm">
+                            <div class="w-full h-full border border-paper/20 text-paper text-[10px] text-center font-bold pt-[1px] leading-tight">
+                                自强<br>不息
+                            </div>
+                        </div>
+                        <span class="text-xs text-sand tracking-widest">刚健旺盛 · 贞固待时</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="border-t border-sand/15 py-10 text-center text-xs text-sand/60 tracking-[0.2em] mt-20">
+        <p>周易古籍六十四卦研习 · 乾卦珍本第一叶</p>
+        <p class="mt-2 text-[9px] tracking-widest">宋刻仿宣纸朱丝墨拓</p>
+    </footer>
+
+    <!-- ================== 核心交互逻辑与数据映射 JavaScript ================== -->
+    <script>
+        // 1. 完全载入您提供的完整的JSON数据
+        const EX_DATA = {
+          "id": 1,
+          "name": "乾卦",
+          "image": "乾为天",
+          "summary": "刚健中正",
+          "path": "/yijing64/gua/01-乾卦-乾为天.md",
+          "upper": "天",
+          "lower": "天",
+          "bits": [1, 1, 1, 1, 1, 1],
+          "title": "乾卦",
+          "sourceUrl": "https://www.zhouyi.cc/zhouyi/yijing64/4103.html",
+          "canon": {
+            "title": "01 乾卦 乾为天（乾上乾下）",
+            "guaci": ["乾：元，亨，利，贞。"],
+            "tuan": ["大哉乾元，万物资始，乃统天。云行雨施，品物流形。大明始终，六位时成，时乘六龙以御天。乾道变化，各正性命，保合太和，乃利贞。首出庶物，万国咸宁。"],
+            "xiang": ["天行健，君子以自强不息。潜龙勿用，阳在下也。见龙再田，德施普也。终日乾乾，反复道也。或跃在渊，进无咎也。飞龙在天，大人造也。亢龙有悔，盈不可久也。用九，天德不可为首也。"]
+          },
+          "diagrams": [
+            { "label": "本卦", "alt": "乾卦本卦图", "src": "http://www.zhouyi.cc/uploads/allimg/141114/3-14111412443V22.png" },
+            { "label": "互卦", "alt": "乾卦互卦图", "src": "http://www.zhouyi.cc/uploads/allimg/141114/3-14111412450X15.png" },
+            { "label": "错卦", "alt": "乾卦错卦图", "src": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114124521956.png" },
+            { "label": "综卦", "alt": "乾卦综卦图", "src": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114124534106.png" }
+          ],
+          "overview": {
+            "original": {
+              "text": ["乾。元，亨，利，贞。", "象曰：天行健，君子以自强不息。"]
+            },
+            "translation": {
+              "text": ["乾卦：大吉大利，吉利的贞卜。", "《象辞》说：天道刚健，运行不已。君子观此卦象，从而以天为法，自强不息。"]
+            }
+          },
+          "lines": [
+            {
+              "index": 0,
+              "name": "初九",
+              "heading": "初九爻辞",
+              "original": {
+                "text": ["初九。潜龙勿用。", "象曰：潜龙勿用，阳在下也。"]
+              },
+              "translation": {
+                "text": ["初九：潜藏的龙，无法施展。", "《象辞》说：潜藏的龙，无法施展，因为初九阳爻处在一卦的下位，所以压抑难伸。"]
+              },
+              "shaoyong": ["平：得此爻者，宜沉稳待机，若一动作即生灾疾，谋事不利，谨防小人。做官的会有阻力。经商的会有阻滞。女命则兴家业，孕生子。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "培养实力，等待机会。" },
+                  { "label": "财运", "text": "宜守不宜攻。" },
+                  { "label": "家宅", "text": "娶妻小心。" },
+                  { "label": "身体", "text": "保养为宜。" }
+                ]
+              },
+              "change": {
+                "description": "初九爻动变得周易第44卦：天风姤。天下有风，吹遍大地，阴阳交合，万物茂盛。媾者，阴阳相遇。但五阳一阴，不能长久相处。",
+                "targetName": "天风姤",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-14111415054D13.png"
+              },
+              "philosophy": [
+                "乾卦第一爻爻辞释义：初九：潜龙勿用。经文意思是：身居下位，时机还没有成熟，所以应当像潜藏的龙一样不要施展你的才干。",
+                "初九：潜龙勿用，龙潜伏着，不要有所作为。",
+                "从卦象上看，初九属于阳爻居于刚位，属于得位。而九二的位置也是阳爻，位于初九之上，两爻同性相斥，属于敌比关系。初九虽然不甘居下，但是被九二所压制，刚健的阳气被埋在了地下。初九纵然有再高的才能，位置低，即使不服气，也要学会隐忍。"
+              ]
+            },
+            {
+              "index": 1,
+              "name": "九二",
+              "heading": "九二爻辞",
+              "original": {
+                "text": ["九二。见龙在田，利见大人。", "象曰：见龙在田，德施普也。"]
+              },
+              "translation": {
+                "text": ["九二：龙出现在大地上，有利于会见贵族王公。", "《象辞》说：龙出现在大地上，喻指君子走出了压抑的低谷，正开始谋取能够广泛施予德泽的社会地位。"]
+              },
+              "shaoyong": ["吉：得此爻者，会得到贵人的提拔。做官的会遇到明主，身居要职。读书人考试能获得佳绩。经商者获利。女命逢之，则又富又贵。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "得贵人之助，有发展机会。" },
+                  { "label": "财运", "text": "开始涨价，官方采购。" },
+                  { "label": "家宅", "text": "婚姻大吉。" },
+                  { "label": "身体", "text": "运动健身。" }
+                ]
+              },
+              "change": {
+                "description": "九二爻动变得周易第13卦：天火同人。上天下火，火性上升，上下和同，同舟共济，人际关系和谐，天下大同。",
+                "targetName": "天火同人",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114150J3592.png"
+              },
+              "philosophy": [
+                "九二：见龙在田，利见大人。爻辞释义：龙出现在田野之上，有利于见到大人物来发展自己。",
+                "本爻辞的意思是：龙出现在田野上，适宜见到大人。",
+                "从卦象上看，九二属于阳爻居于阴位，属于失位，但是位于下卦之中，居中。二为地之上，表示龙已经崭露头角，才华受到注意了，这时见到大人是有利的。因为这个时候虽然具备了一定的能力，但是还很有限，如果得到大人物的提携，会更加顺利。这个大人物就是自己的贵人。"
+              ]
+            },
+            {
+              "index": 2,
+              "name": "九三",
+              "heading": "九三爻辞",
+              "original": {
+                "text": ["九三。君子终日乾乾，夕惕若；厉，无咎。", "象曰：终日乾乾，反复道也。"]
+              },
+              "translation": {
+                "text": ["九三：有才德的君子始终是白天勤奋努力，夜晚戒惧反省，虽然处境艰难，但终究没有灾难。", "《象辞》说：君子整日里勤奋努力，意思是反复行道，坚持不舍。"]
+              },
+              "shaoyong": ["平：得此爻者，会往来不停，凡事不认真计划，躁动者会有损失。做官的会身兼重职，如果能保持忧虑和谨慎的态度则没有过失。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "功名未显，戒慎免咎。" },
+                  { "label": "财运", "text": "日夜防范，可脱险获利。" },
+                  { "label": "家宅", "text": "勤俭保家；不宜攀结高亲。" },
+                  { "label": "身体", "text": "小心保养。" }
+                ]
+              },
+              "change": {
+                "description": "九三爻动变得周易第10卦：天泽履。天泽履。乾为天，兑为泽，履踩虎尾而不咬人。履意为实践，卦义是脚踏实地的向前进取的意思。",
+                "targetName": "天泽履",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114150Z4410.png"
+              },
+              "philosophy": [
+                "九三爻辞释义：乾乾指勤勉不懈；惕代表小心谨慎；厉表示危险。即便存在着危险，只要时刻保持警惕，便不会造成灾祸。",
+                "九三本身过刚，做亊又不适中，处于两卦夹层中。唯有自强不息、随时随地加以警惕，方能逢凶化吉。",
+                "这犹如初入江湖的学子，面临前途未卜的社会压力，极需在日夜不懈、慎行警省的进取状态中寻求发展。"
+              ]
+            },
+            {
+              "index": 3,
+              "name": "九四",
+              "heading": "九四爻辞",
+              "original": {
+                "text": ["九四。或跃在渊，无咎。", "象曰：或跃在渊，进无咎也。"]
+              },
+              "translation": {
+                "text": ["九四：龙也许跳进深潭，没有灾难。", "《象辞》说：龙也许跳进深潭，表示可以有所作为而没有灾难。"]
+              },
+              "shaoyong": ["平：得此爻者，百为艰难。做官的会停缺待职，等待机会。女命逢之，则安乐富贵也。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "一举成名。" },
+                  { "label": "财运", "text": "物价高涨，可保无咎。" },
+                  { "label": "家宅", "text": "有一时振兴之象。" },
+                  { "label": "身体", "text": "继续健身。" }
+                ]
+              },
+              "change": {
+                "description": "九四爻动变得周易第9卦：风天小畜。乾为天，巽为风。蓄养实力，由于力量相对有限，需等待大好时机方可大有作为。",
+                "targetName": "风天小畜",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114150956438.png"
+              },
+              "philosophy": [
+                "爻辞释义：龙或跃上天空，或停留在深渊，只要根据形势的需要而灵活变通，就不会有错误。",
+                "此爻给人的最大启示在于：进退有据，见机而作。",
+                "九四跨入上卦，位置失准，因而产生不确定性。因时因位而变，根据时机灵活进退，反而最合乎生存法则。"
+              ]
+            },
+            {
+              "index": 4,
+              "name": "九五",
+              "heading": "九五爻辞",
+              "original": {
+                "text": ["九五。飞龙在天，利见大人。", "象曰：飞龙在天，大人造也。"]
+              },
+              "translation": {
+                "text": ["九五：龙飞腾在空中，有利于会见贵族王公。", "《象辞》说：龙飞腾在空中，意味着君子大有所为。"]
+              },
+              "shaoyong": ["吉：得此爻者，会遇到贵人，谋遂志得。做官的会飞黄腾达。女命则兼男权，难免孤独。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "直上云霄。" },
+                  { "label": "财运", "text": "五谷之类的贸易，物价飞升，有官府支持。" },
+                  { "label": "家宅", "text": "富贵之家。" },
+                  { "label": "身体", "text": "保养健身，注意气血。" }
+                ]
+              },
+              "change": {
+                "description": "九五爻动变得周易第14卦：火天大有。火在天上，普照万物，万民归顺，顺天依时，大有所成。",
+                "targetName": "火天大有",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114151050464.png"
+              },
+              "philosophy": [
+                "九五位于君主之位。龙所象征的阳刚之气终于飞上九霄，如日中天，普照万物，运势正值顶峰。",
+                "对个人而言，这是多年积蓄终得大展宏图、实现平生抱负的最佳时期，代表事业登峰造极。"
+              ]
+            },
+            {
+              "index": 5,
+              "name": "上九",
+              "heading": "上九爻辞",
+              "original": {
+                "text": ["上九。亢龙有悔。", "象曰：亢龙有悔，盈不可久也。"]
+              },
+              "translation": {
+                "text": ["上九：升腾到极限的龙会有灾祸之困。", "《象辞》说：升腾到极限的龙会有灾祸之困，这是警戒人们崇高、盈满是不可能长久保持的。"]
+              },
+              "shaoyong": ["凶：得此爻者，有过刚取凶之祸，凡事应退一步考虑，否则物极必反。做官的有贬谪退职之忧。"],
+              "fuPeirong": {
+                "items": [
+                  { "label": "时运", "text": "由满招损，退而自省。" },
+                  { "label": "财运", "text": "过盈则必有亏。" },
+                  { "label": "家宅", "text": "婚嫁不利，注意防范。" },
+                  { "label": "身体", "text": "极虚或阳亢之疾。" }
+                ]
+              },
+              "change": {
+                "description": "上九爻动变得周易第43卦：泽天夬。乾为天为健，兑为泽为悦。五阳去一阴，决而断之，宜果敢前行。",
+                "targetName": "泽天夬",
+                "targetImage": "http://www.zhouyi.cc/uploads/allimg/141114/3-141114151146124.png"
+              },
+              "philosophy": [
+                "亢龙有悔，表明事物发展到极点，必将面临衰落的危机。只知进而不知退、知存而不知亡，则必然取祸。",
+                "此爻警示人们，位极则险，盛极则哀，应当在得意之时，明辨进退存亡之常道，方能长久。"
+              ]
+            }
+          ]
+        };
+
+        // 2. 初始化渲染古典静态元素
+        function initClassicViews() {
+            // 页眉经文等
+            document.getElementById("canon-title").innerText = EX_DATA.canon.title;
+            document.getElementById("guaci-text").innerText = EX_DATA.canon.guaci[0];
+            document.getElementById("tuan-text").innerText = EX_DATA.canon.tuan[0];
+            document.getElementById("xiang-text").innerText = EX_DATA.canon.xiang[0];
+            
+            // 白话译文
+            const translationDiv = document.getElementById("overview-translation-text");
+            translationDiv.innerHTML = EX_DATA.overview.translation.text.map(t => `<p class="leading-relaxed font-medium">${t}</p>`).join("");
+
+            // 卦图矩阵
+            const diagramsGrid = document.getElementById("diagrams-grid");
+            diagramsGrid.innerHTML = EX_DATA.diagrams.map((d, index) => {
+                const borderClass = index === 0 ? 'border-seal/40 bg-clay/20' : 'border-sand/15 bg-paper';
+                return `
+                    <div class="flex flex-col items-center p-3 rounded-sm border ${borderClass}">
+                        <span class="text-[10px] text-sand font-bold mb-1">${d.label}</span>
+                        <img class="h-14 w-auto object-contain mix-blend-multiply opacity-80 hover:opacity-100 transition-opacity" src="${d.src}" alt="${d.alt}">
+                    </div>
+                `;
+            }).join("");
+
+            // 初始化爻辞交互列表
+            renderInteractiveLinesList();
+        }
+
+        // 3. 渲染交互式爻辞列表 (100% 汉字)
+        function renderInteractiveLinesList() {
+            const container = document.getElementById("lines-interactive-list");
+            container.innerHTML = EX_DATA.lines.map((line, idx) => {
+                const isSelected = idx === currentLineIndex;
+                const activeClass = isSelected 
+                    ? 'bg-clay/50 border-l-4 border-seal shadow-sm' 
+                    : 'bg-clay/15 hover:bg-clay/30 border-l border-sand/10 cursor-pointer';
+                const labelColor = isSelected ? 'text-seal font-black' : 'text-sand';
+                const textStyle = isSelected ? 'text-charcoal font-black' : 'text-charcoal/80';
+                
+                return `
+                    <div onclick="selectLine(${idx})" class="flex flex-col md:flex-row md:items-center justify-between p-3.5 transition-all duration-300 rounded-xs ${activeClass}">
+                        <div class="flex items-center space-x-4">
+                            <span class="${labelColor} w-12 font-bold">${line.name}</span>
+                            <span class="${textStyle}">${line.text}</span>
+                        </div>
+                        <span class="text-xs text-sand/70 mt-1 md:mt-0 italic">${line.imageText}</span>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // 4. 六爻爻画联动点击
+        let currentLineIndex = 0; // 默认初九爻
+        function selectLineByGua(idx) {
+            selectLine(idx);
+        }
+
+        // 5. 切换爻解析核心交互（墨晕浸润效果）
+        function selectLine(idx) {
+            currentLineIndex = idx;
+            const line = EX_DATA.lines[idx];
+            if (!line) return;
+
+            // 激活爻画指示器状态（重绘高亮爻画）
+            for(let i = 0; i < 6; i++) {
+                const el = document.getElementById(`gualine-${i}`);
+                if (el) {
+                    if (i === idx) {
+                        el.className = "h-2.5 bg-seal w-full rounded-xs cursor-pointer transition-all duration-300 transform scale-x-105 shadow-sm";
+                    } else {
+                        el.className = "h-2.5 bg-charcoal w-full rounded-xs cursor-pointer transition-all duration-300 hover:bg-seal";
+                    }
+                }
+            }
+
+            // 更新交互列表高亮
+            renderInteractiveLinesList();
+
+            // 激活墨晕动效
+            const detailSection = document.getElementById("dynamic-detail-section");
+            detailSection.classList.remove("ink-fade-active");
+            void detailSection.offsetWidth; // 触发Reflow重绘
+            
+            // 数据替换
+            document.getElementById("dynamic-detail-title").innerText = `${line.name} · ${line.heading}`;
+            
+            // 白话原译并排
+            const transDiv = document.getElementById("dynamic-detail-translation");
+            transDiv.innerHTML = `
+                <div class="space-y-1">
+                    <p class="font-semibold text-charcoal">古文原文：${line.original.text.join(" ")}</p>
+                    <p class="text-sand mt-2">白话释义：${line.translation.text.join(" ")}</p>
+                </div>
+            `;
+
+            // 爻变卦象
+            document.getElementById("dynamic-change-target").innerText = `此爻动，变得：${line.change.targetName}`;
+            document.getElementById("dynamic-change-desc").innerText = line.change.description;
+            document.getElementById("dynamic-change-img").src = line.change.targetImage;
+            document.getElementById("dynamic-change-img").alt = line.change.targetName;
+
+            // 邵雍断
+            document.getElementById("dynamic-shaoyong").innerText = line.shaoyong[0];
+
+            // 傅佩荣断列表
+            const fuList = document.getElementById("dynamic-fupeirong-list");
+            fuList.innerHTML = line.fuPeirong.items.map(item => `
+                <p class="flex justify-between items-start gap-4">
+                    <strong class="text-seal min-w-[3rem]">【${item.label}】</strong>
+                    <span class="text-charcoal/90 text-right">${item.text}</span>
+                </p>
+            `).join("");
+
+            // 哲学深究
+            const philDiv = document.getElementById("dynamic-philosophy");
+            philDiv.innerHTML = line.philosophy.map(p => `<p class="leading-relaxed tracking-wide">${p}</p>`).join("");
+
+            // 重新添加墨晕类
+            detailSection.classList.add("ink-fade-active");
+        }
+
+        // 初始化加载
+        window.onload = function() {
+            initClassicViews();
+            selectLine(0); // 默认初九
+        };
+    </script>
+</body>
+</html>
