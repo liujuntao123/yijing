@@ -194,8 +194,8 @@
     z-index: 12;
     min-height: 72px;
     padding: 18px clamp(16px, 5vw, 72px);
-    border-bottom: 1px solid rgba(110, 102, 90, 0.1);
-    background: linear-gradient(to bottom, rgba(250, 248, 245, 0.94), rgba(250, 248, 245, 0.78));
+    /*border-bottom: 1px solid rgba(110, 102, 90, 0.1);*/
+    /*background: linear-gradient(to bottom, rgba(250, 248, 245, 0.94), rgba(250, 248, 245, 0.78));*/
     backdrop-filter: blur(18px);
   }
 
