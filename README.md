@@ -39,3 +39,7 @@ npm run test:e2e
 ## 数据来源
 
 项目中的六十四卦文本整理在 `yijing64/` 目录下，页面使用的结构化数据位于 `src/data/yijing.json`。数据整理脚本放在 `scripts/` 目录中。
+
+## 友情链接
+
+学AI，上L站：https://linux.do
