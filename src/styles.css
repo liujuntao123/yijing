@@ -189,6 +189,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    width: 100%;
   }
 
   .brand-mark {
@@ -222,6 +223,37 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.24em;
+  }
+
+  .header-icon-link {
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 3px;
+    color: var(--muted);
+    transition:
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .header-icon-link:hover {
+    color: var(--accent);
+    background: rgba(243, 237, 226, 0.58);
+    transform: translateY(-1px);
+  }
+
+  .header-icon-link:active {
+    transform: translateY(1px);
+  }
+
+  .github-icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
   }
 
   main {
