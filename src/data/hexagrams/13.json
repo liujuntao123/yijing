@@ -14,7 +14,7 @@
     1,
     1
   ],
-  "title": "周易第十三卦",
+  "title": "周易第13卦_同人卦(天火同人)_乾上离下",
   "sourceUrl": "https://www.zhouyi.cc/zhouyi/yijing64/4140.html",
   "canon": {
     "title": "13 同人卦 天火同人（乾上离下）",
@@ -31,37 +31,37 @@
       {
         "index": 0,
         "name": "初九",
-        "text": "同人于门，无咎。",
+        "text": "初九：同人于门，无咎。",
         "imageText": "《象》曰：出门同人，又 谁咎也。"
       },
       {
         "index": 1,
         "name": "六二",
-        "text": "同人于宗，吝。",
+        "text": "六二：同人于宗，吝。",
         "imageText": "《象》曰：同人于宗，吝道也。"
       },
       {
         "index": 2,
         "name": "九三",
-        "text": "伏戎于莽，升其高陵，三岁不兴。",
+        "text": "九三：伏戎于莽，升其高陵，三岁不兴。",
         "imageText": "《象》曰：伏戎于莽，敌刚也。三岁不兴，安行 也。"
       },
       {
         "index": 3,
         "name": "九四",
-        "text": "乘其墉，弗克攻，吉。",
+        "text": "九四：乘其墉，弗克攻，吉。",
         "imageText": "《象》曰：乘其墉，义弗克也，其吉，则困而反则也。"
       },
       {
         "index": 4,
         "name": "九五",
-        "text": "同人，先号咷而后笑。大师克相遇。",
+        "text": "九五：同人，先号咷而后笑。大师克相遇。",
         "imageText": "《象》曰：同人之先，以中直也。大师相遇，言相克也。"
       },
       {
         "index": 5,
         "name": "上九",
-        "text": "同人于郊，无悔。",
+        "text": "上九：同人于郊，无悔。",
         "imageText": "《象》曰：同人于郊，志未得也。"
       }
     ]
@@ -69,26 +69,31 @@
   "diagrams": [
     {
       "label": "本卦",
-      "alt": "天火同人卦图",
+      "text": "第13卦：同人卦(天火同人)",
+      "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151J150D4.png"
     },
     {
       "label": "互卦",
-      "alt": "同人卦互卦图",
+      "text": "第44卦：姤卦(天风姤)",
+      "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151J20G54.png"
     },
     {
       "label": "错卦",
-      "alt": "同人卦错卦图",
+      "text": "第7卦：师卦(地水师)",
+      "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151J223428.png"
     },
     {
       "label": "综卦",
-      "alt": "同人卦综卦图",
+      "text": "第14卦：大有卦(火天大有)",
+      "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151J240417.png"
     }
   ],
   "overview": {
+    "heading": "周易第十三卦详解",
     "original": {
       "text": [
         "同人。同人于野，亨。利涉大川，利君子贞。"
@@ -222,14 +227,14 @@
       "change": {
         "images": [
           {
-            "alt": "初九变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JA1H0.png"
           }
         ],
         "description": "初九爻动变得周易第33卦：天山遁。这个卦是异卦（下艮上乾）相叠。乾为天，艮为山。天下有山，山高天退。阴长阳消，小人得势，君子退隐，明哲保身，伺机救天下。",
         "targetId": 33,
         "targetName": "天山遁",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JA1H0.png"
+        "targetImage": "天山遁"
       },
       "philosophy": [
         "初九这一爻为同人卦最初始的状态，这一爻属于阳爻居刚位，位正，得势。与“九四”同性相斥，不相应；但也象征他们中间没有私情存在，与人交往的公正与广阔。所以说，是在门外与人交往。虽然没有到达“卦辞”中的“野”那样的大同程度，但已超越在一门之内的狭隘的近亲关系。像这样交往广阔，当然不会有过失。",
@@ -286,14 +291,14 @@
       "change": {
         "images": [
           {
-            "alt": "六二变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JGH22.png"
           }
         ],
         "description": "六二爻动变得周易第1卦：乾为天。这个卦是同卦（下乾上乾）相叠。象征天，喻龙（德才的君子），又象征纯粹的阳和健，表明兴盛强健。乾卦是根据万物变通的道理，以“元、亨、利、贞”为卦辞，表示吉祥如意，教导人遵守天道的德行。",
         "targetId": 1,
         "targetName": "乾为天",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JGH22.png"
+        "targetImage": "乾为天"
       },
       "philosophy": [
         "宗：是宗族。吝：偏狭，鄙吝。",
@@ -349,14 +354,14 @@
       "change": {
         "images": [
           {
-            "alt": "九三变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JI44Q.png"
           }
         ],
         "description": "九三爻动变得周易第25卦：天雷无妄。这个卦是异卦（下震上乾）相叠。乾为天为刚为健；震为雷为刚为动。动而健，刚阳盛，人心振奋，必有所得，但唯循纯正，不可妄行。无妄必有获，必可致福。",
         "targetId": 25,
         "targetName": "天雷无妄",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JI44Q.png"
+        "targetImage": "天雷无妄"
       },
       "philosophy": [
         "九三：伏戎于莽，升其高陵，三岁不兴。爻辞释义",
@@ -414,14 +419,14 @@
       "change": {
         "images": [
           {
-            "alt": "九四变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JP0445.png"
           }
         ],
         "description": "九四爻动变得周易第37卦：风火家人。这个卦是异卦（下离上巽）相叠。离为火；巽为风。火使热气上升，成为风。一切事物皆应以内在为本，然后伸延到外。发生于内，形成于外。喻先治家而后治天下，家道正，天下安乐。",
         "targetId": 37,
         "targetName": "风火家人",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JP0445.png"
+        "targetImage": "风火家人"
       },
       "philosophy": [
         "同人卦第四爻，爻辞：九四：乘其墉，弗克攻，吉。",
@@ -476,14 +481,14 @@
       "change": {
         "images": [
           {
-            "alt": "九五变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JQD22.png"
           }
         ],
         "description": "九五爻动变得周易第30卦：离为火。这个卦是同卦（下离上离）相叠。离者丽也，附着之意，一阴附丽，上下二阳，该卦象征火，内空外明。离为火、为明，太阳反复升落，运行不息，柔顺为心。",
         "targetId": 30,
         "targetName": "离为火",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JQD22.png"
+        "targetImage": "离为火"
       },
       "philosophy": [
         "同人卦第五爻，爻辞：九五：同人，先号眺，而后笑，大师克相遇。",
@@ -540,14 +545,14 @@
       "change": {
         "images": [
           {
-            "alt": "上九变卦图",
+            "alt": "图",
             "src": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JSB01.png"
           }
         ],
         "description": "上九爻动变得周易第49卦：泽火革。这个卦是异卦（下离上兑）相叠。离为火、兑为泽，泽内有水。水在上而下浇，火在下而上升。火旺水干，水大火熄。二者相生亦相克，必然出现变革。变革是宇宙的基本规律。",
         "targetId": 49,
         "targetName": "泽火革",
-        "targetImage": "http://www.zhouyi.cc/uploads/allimg/141115/3-1411151JSB01.png"
+        "targetImage": "泽火革"
       },
       "philosophy": [
         "同人卦第六爻，爻辞：上九：同人于郊，无悔。",

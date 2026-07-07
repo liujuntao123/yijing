@@ -16,8 +16,14 @@ import {
 
 type StructuredDataset = typeof data;
 type StructuredHexagram = StructuredDataset["hexagrams"][number];
-type AspectBlock = StructuredHexagram["overview"]["fuPeirong"];
-type ClassicBlock = StructuredHexagram["overview"]["original"];
+type AspectBlock = {
+  text: string[];
+  items: Array<{ label: string; text: string }>;
+};
+type ClassicBlock = {
+  text: string[];
+  imageText: string[];
+};
 type DetailLine = StructuredHexagram["lines"][number];
 type CanonLine = StructuredHexagram["canon"]["lines"][number];
 

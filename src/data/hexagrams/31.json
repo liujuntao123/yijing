@@ -14,7 +14,7 @@
     1,
     0
   ],
-  "title": "咸卦",
+  "title": "周易第31卦_咸卦(泽山咸)_兑上艮下",
   "sourceUrl": "https://www.zhouyi.cc/zhouyi/yijing64/4170.html",
   "canon": {
     "title": "31 咸卦 泽山咸（兑上艮下）",
@@ -68,27 +68,32 @@
   },
   "diagrams": [
     {
-      "label": "卦图",
+      "label": "本卦",
+      "text": "第31卦：咸卦(泽山咸)",
       "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141117/3-14111G3263R33.png"
     },
     {
-      "label": "卦图",
+      "label": "互卦",
+      "text": "第44卦：姤卦(天风姤)",
       "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141117/3-14111G3264XN.png"
     },
     {
-      "label": "卦图",
+      "label": "错卦",
+      "text": "第41卦：损卦(山泽损)",
       "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141117/3-14111G32A94X.png"
     },
     {
-      "label": "卦图",
+      "label": "综卦",
+      "text": "第32卦：恒卦(雷风恒)",
       "alt": "图",
       "src": "http://www.zhouyi.cc/uploads/allimg/141117/3-14111G32G0A7.png"
     }
   ],
   "overview": {
+    "heading": "周易第三十一卦详解",
     "original": {
       "text": [
         "咸。亨，利贞。取女吉。"
@@ -134,7 +139,9 @@
       ]
     },
     "traditional": {
-      "text": [],
+      "text": [
+        "这个卦是异卦（下艮上兑）相叠。艮为山；泽为水。兑柔在上，艮刚在下，水向下渗，柔上而刚下，交相感应。感则成。"
+      ],
       "items": [
         {
           "label": "大象",
@@ -228,7 +235,7 @@
         "description": "初六爻动变得周易第49卦：泽火革。这个卦是异卦（下离上兑）相叠。离为火、兑为泽，泽内有水。水在上而下浇，火在下而上升。火旺水干，水大火熄。二者相生亦相克，必然出现变革。变革是宇宙的基本规律。",
         "targetId": 49,
         "targetName": "泽火革",
-        "targetImage": ""
+        "targetImage": "泽火革"
       },
       "philosophy": [
         "咸卦第一爻，爻辞：初六：咸其拇。爻辞释义",
@@ -298,7 +305,7 @@
         "description": "六二爻动变得周易第28卦：泽风大过。这个卦是异卦（下巽上兑）相叠。兑为泽、为悦，巽为木、为顺，泽水淹舟，遂成大错。阴阳爻相反，阳大阴小，行动非常，有过度形象，内刚外柔。",
         "targetId": 28,
         "targetName": "泽风大过",
-        "targetImage": ""
+        "targetImage": "泽风大过"
       },
       "philosophy": [
         "咸卦第二爻，爻辞：六二：咸其腓，凶；居吉。爻辞释义腓：指小腿肚。",
@@ -366,7 +373,7 @@
         "description": "九三爻动变得周易第45卦：泽地萃。这个卦是异卦（下坤上兑）相叠。坤为地、为顺；兑为泽、为水。泽泛滥淹没大地，人众多相互斗争，危机必四伏，务必顺天任贤，未雨绸缪，柔顺而又和悦，彼此相得益彰，安居乐业。萃，聚集、团结。",
         "targetId": 45,
         "targetName": "泽地萃",
-        "targetImage": ""
+        "targetImage": "泽地萃"
       },
       "philosophy": [
         "咸卦第三爻，爻辞：九三：咸其股，执其随，往吝。爻辞释义",
@@ -436,7 +443,7 @@
         "description": "九四爻动变得周易第39卦：水山蹇。这个卦是异卦（下艮上坎）相叠。坎为水，艮为山。山高水深，困难重重，人生险阻，见险而止，明哲保身，可谓智慧。蹇，跋行艰难。",
         "targetId": 39,
         "targetName": "水山蹇",
-        "targetImage": ""
+        "targetImage": "水山蹇"
       },
       "philosophy": [
         "咸卦第四爻，爻辞：九四：贞吉，悔亡；憧憧往来，朋从尔思。爻辞释义",
@@ -505,7 +512,7 @@
         "description": "九五爻动变得周易第62卦：雷山小过。这个卦是异卦（下艮上震）相叠。艮为山，震为雷，过山雷鸣，不可不畏惧。阳为大，阴为小，卦外四阴超过中二阳，故称“小过”，小有越过。",
         "targetId": 62,
         "targetName": "雷山小过",
-        "targetImage": ""
+        "targetImage": "雷山小过"
       },
       "philosophy": [
         "咸卦第五爻，爻辞：九五：咸其晦，无悔。爻辞释义",
@@ -573,7 +580,7 @@
         "description": "上六爻动变得周易第33卦：天山遁。这个卦是异卦（下艮上乾）相叠。乾为天，艮为山。天下有山，山高天退。阴长阳消，小人得势，君子退隐，明哲保身，伺机救天下。",
         "targetId": 33,
         "targetName": "天山遁",
-        "targetImage": ""
+        "targetImage": "天山遁"
       },
       "philosophy": [
         "咸卦第六爻，爻辞：上六：咸其辅、颊、舌。",
