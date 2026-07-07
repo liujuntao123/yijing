@@ -1087,6 +1087,7 @@
 
   .aspect-list div {
     display: grid;
+    align-content: start;
     gap: 4px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--line);
@@ -1100,8 +1101,32 @@
   }
 
   .prose-panel {
-    padding-top: 24px;
-    border-top: 1px solid var(--line);
+    position: relative;
+    gap: 14px;
+    padding: 24px clamp(20px, 3vw, 30px);
+    border: 1px solid rgba(150, 46, 42, 0.12);
+    border-left: 3px solid rgba(150, 46, 42, 0.42);
+    background:
+      linear-gradient(90deg, rgba(150, 46, 42, 0.06), transparent 62%),
+      rgba(250, 248, 245, 0.56);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
+  }
+
+  .prose-panel h3 {
+    width: fit-content;
+    padding: 0 0 8px;
+    border-bottom: 1px solid rgba(150, 46, 42, 0.22);
+    color: var(--accent);
+  }
+
+  .prose-panel p {
+    color: #2e2922;
+    font-size: 16px;
+    line-height: 2;
+  }
+
+  .prose-panel p + p {
+    margin-top: 2px;
   }
 
   .change-box {

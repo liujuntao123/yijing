@@ -395,6 +395,9 @@ function HexView({
             <ClassicBlockView block={overview.translation} quiet title="白话文解释" />
           </section>
 
+          <AspectPanel title="传统解卦" block={overview.traditional} wide />
+          <ParagraphPanel title="本卦哲学含义" paragraphs={overview.philosophy} />
+
           <section id="line-detail" className="line-focus">
             <div className="line-focus-head">
               <div>
@@ -414,9 +417,7 @@ function HexView({
             <AspectPanel title="傅佩荣解" block={line.fuPeirong.items.length || line.fuPeirong.text.length ? line.fuPeirong : overview.fuPeirong} />
           </div>
 
-          <AspectPanel title="传统解卦" block={overview.traditional} wide />
           <ParagraphPanel title={`${line.name}爻的哲学含义`} paragraphs={line.philosophy} />
-          <ParagraphPanel title="本卦哲学含义" paragraphs={overview.philosophy} />
         </div>
       </article>
     </motion.section>

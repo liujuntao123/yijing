@@ -30,6 +30,22 @@ test("supports bagua line toggles, detail anchor and hexagram search", async ({ 
   await expect(page.locator(".source-block")).toContainText("泰。小往大来，吉亨。");
   await expect(page.locator(".source-block")).not.toContainText("豫卦原文");
   await expect(page.locator(".summary-panel")).toContainText("泰：小往大来");
+  const detailOrder = await page.locator(".structured-html").evaluate((panel) =>
+    Array.from(panel.children)
+      .map((child) => child.textContent ?? "")
+      .filter((text) => /卦辞原文|传统解卦|本卦哲学含义|当前爻辞|爻变与卦变|傅佩荣解|爻的哲学含义/.test(text))
+      .map((text) => {
+        if (text.includes("卦辞原文")) return "source";
+        if (text.includes("传统解卦")) return "hex-aspect";
+        if (text.includes("本卦哲学含义")) return "hex-philosophy";
+        if (text.includes("当前爻辞")) return "line-source";
+        if (text.includes("爻变与卦变")) return "change";
+        if (text.includes("傅佩荣解")) return "line-scholar";
+        if (text.includes("爻的哲学含义")) return "line-philosophy";
+        return "";
+      }),
+  );
+  expect(detailOrder).toEqual(["source", "hex-aspect", "hex-philosophy", "line-source", "change", "line-scholar", "line-philosophy"]);
 
   await page.getByLabel("选择六十四卦").selectOption("2");
   await expect(page.locator(".bagua-circle").getByRole("button", { name: "乾" })).not.toHaveClass(/active/);
